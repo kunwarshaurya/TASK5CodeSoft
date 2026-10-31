@@ -1,0 +1,76 @@
+{
+  "info": {
+    "name": "Online Quiz System API — CodSoft Task 5",
+    "description": "Complete API collection for the Online Quiz System",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:5003/api/v1" },
+    { "key": "adminToken", "value": "" },
+    { "key": "participantToken", "value": "" },
+    { "key": "quizId", "value": "" },
+    { "key": "questionId", "value": "" },
+    { "key": "attemptId", "value": "" }
+  ],
+  "item": [
+    {
+      "name": "Health",
+      "item": [{ "name": "Health Check", "request": { "method": "GET", "url": "{{baseUrl}}/health" } }]
+    },
+    {
+      "name": "Authentication",
+      "item": [
+        { "name": "Register Participant", "event": [{ "listen": "test", "script": { "exec": ["const r=pm.response.json();if(r.data){pm.collectionVariables.set('participantToken',r.data.token);}"] } }], "request": { "method": "POST", "url": "{{baseUrl}}/auth/register", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"name\":\"Alice Student\",\"email\":\"alice@quiz.com\",\"password\":\"password123\"}" } } },
+        { "name": "Login Admin", "event": [{ "listen": "test", "script": { "exec": ["const r=pm.response.json();if(r.data){pm.collectionVariables.set('adminToken',r.data.token);}"] } }], "request": { "method": "POST", "url": "{{baseUrl}}/auth/login", "header": [{ "key": "Content-Type", "value": "application/json" }], "body": { "mode": "raw", "raw": "{\"email\":\"admin@quizsystem.com\",\"password\":\"Admin@123456\"}" } } },
+        { "name": "Get Current User", "request": { "method": "GET", "url": "{{baseUrl}}/auth/me", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } }
+      ]
+    },
+    {
+      "name": "Quiz Management (Admin)",
+      "item": [
+        { "name": "Create Quiz", "event": [{ "listen": "test", "script": { "exec": ["const r=pm.response.json();if(r.data){pm.collectionVariables.set('quizId',r.data.quiz._id);}"] } }], "request": { "method": "POST", "url": "{{baseUrl}}/quizzes", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }], "body": { "mode": "raw", "raw": "{\"title\":\"JavaScript Fundamentals\",\"description\":\"Test your JS knowledge\",\"category\":\"Programming\",\"timeLimitMinutes\":15,\"passingScore\":50,\"negativeMarking\":true,\"negativeMarkingPenalty\":0.25,\"maxAttempts\":3}" } } },
+        { "name": "List Quizzes", "request": { "method": "GET", "url": "{{baseUrl}}/quizzes", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } },
+        { "name": "Get Quiz", "request": { "method": "GET", "url": "{{baseUrl}}/quizzes/{{quizId}}", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } },
+        { "name": "Update Quiz", "request": { "method": "PATCH", "url": "{{baseUrl}}/quizzes/{{quizId}}", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }], "body": { "mode": "raw", "raw": "{\"description\":\"Updated description\"}" } } }
+      ]
+    },
+    {
+      "name": "Questions (Admin)",
+      "item": [
+        { "name": "Add Question", "event": [{ "listen": "test", "script": { "exec": ["const r=pm.response.json();if(r.data){pm.collectionVariables.set('questionId',r.data.question._id);}"] } }], "request": { "method": "POST", "url": "{{baseUrl}}/quizzes/{{quizId}}/questions", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{adminToken}}" }], "body": { "mode": "raw", "raw": "{\"text\":\"What does 'var' do in JavaScript?\",\"options\":[{\"text\":\"Declares a variable\",\"isCorrect\":true},{\"text\":\"Declares a constant\",\"isCorrect\":false},{\"text\":\"Declares a function\",\"isCorrect\":false},{\"text\":\"None of the above\",\"isCorrect\":false}],\"marks\":2,\"explanation\":\"var declares a function-scoped variable\"}" } } },
+        { "name": "List Questions (Admin view)", "request": { "method": "GET", "url": "{{baseUrl}}/quizzes/{{quizId}}/questions", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } },
+        { "name": "Get Question", "request": { "method": "GET", "url": "{{baseUrl}}/quizzes/{{quizId}}/questions/{{questionId}}", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } }
+      ]
+    },
+    {
+      "name": "Publish/Unpublish",
+      "item": [
+        { "name": "Publish Quiz", "request": { "method": "PATCH", "url": "{{baseUrl}}/quizzes/{{quizId}}/publish", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } },
+        { "name": "Unpublish Quiz", "request": { "method": "PATCH", "url": "{{baseUrl}}/quizzes/{{quizId}}/unpublish", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } }
+      ]
+    },
+    {
+      "name": "Quiz Attempt (Participant)",
+      "item": [
+        { "name": "Start Attempt", "event": [{ "listen": "test", "script": { "exec": ["const r=pm.response.json();if(r.data){pm.collectionVariables.set('attemptId',r.data.attempt._id);}"] } }], "request": { "method": "POST", "url": "{{baseUrl}}/quizzes/{{quizId}}/attempts", "header": [{ "key": "Authorization", "value": "Bearer {{participantToken}}" }] } },
+        { "name": "Get Attempt Questions", "request": { "method": "GET", "url": "{{baseUrl}}/attempts/{{attemptId}}/questions", "header": [{ "key": "Authorization", "value": "Bearer {{participantToken}}" }] } },
+        { "name": "Submit Answers", "request": { "method": "POST", "url": "{{baseUrl}}/attempts/{{attemptId}}/submit", "header": [{ "key": "Content-Type", "value": "application/json" }, { "key": "Authorization", "value": "Bearer {{participantToken}}" }], "body": { "mode": "raw", "raw": "{\"answers\":[{\"questionId\":\"QUESTION_ID_HERE\",\"selectedOptionId\":\"OPTION_ID_HERE\"}]}" } } },
+        { "name": "Get Attempt Result", "request": { "method": "GET", "url": "{{baseUrl}}/attempts/{{attemptId}}", "header": [{ "key": "Authorization", "value": "Bearer {{participantToken}}" }] } }
+      ]
+    },
+    {
+      "name": "Results & Leaderboard",
+      "item": [
+        { "name": "My Results", "request": { "method": "GET", "url": "{{baseUrl}}/users/me/results", "header": [{ "key": "Authorization", "value": "Bearer {{participantToken}}" }] } },
+        { "name": "Quiz Leaderboard", "request": { "method": "GET", "url": "{{baseUrl}}/quizzes/{{quizId}}/leaderboard", "header": [{ "key": "Authorization", "value": "Bearer {{participantToken}}" }] } }
+      ]
+    },
+    {
+      "name": "Admin",
+      "item": [
+        { "name": "Quiz Statistics", "request": { "method": "GET", "url": "{{baseUrl}}/admin/statistics", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } },
+        { "name": "Quiz Attempts (Admin)", "request": { "method": "GET", "url": "{{baseUrl}}/quizzes/{{quizId}}/attempts", "header": [{ "key": "Authorization", "value": "Bearer {{adminToken}}" }] } }
+      ]
+    }
+  ]
+}

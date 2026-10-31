@@ -1,0 +1,57 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#f6f5f1" />
+    <title>Brightside — Quiz Studio</title>
+    <link rel="stylesheet" href="/styles.css" />
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <section id="auth-screen" class="auth-screen">
+      <header class="auth-brand"><span class="logo-mark">b<span>·</span></span><span>brightside</span></header>
+      <main class="auth-layout">
+        <section class="auth-copy">
+          <span class="eyebrow"><i></i> LITTLE QUESTIONS, BIG IDEAS</span>
+          <h1>Curiosity looks<br />good <em>on you.</em></h1>
+          <p>Pick a topic, trust what you know, and see how far a little curiosity can take you.</p>
+          <div class="orbit-art" aria-hidden="true"><span class="orbit orbit-a"></span><span class="orbit orbit-b"></span><span class="orbit orbit-c"></span><span class="orbit-core">?</span><span class="orbit-dot"></span></div>
+        </section>
+        <section class="auth-card">
+          <div class="auth-tabs" role="tablist" aria-label="Account access">
+            <button id="login-tab" class="auth-tab active" type="button" role="tab" aria-selected="true">Sign in</button>
+            <button id="register-tab" class="auth-tab" type="button" role="tab" aria-selected="false">Create account</button>
+          </div>
+          <h2 id="auth-title">Welcome back</h2><p id="auth-subtitle" class="auth-subtitle">Sign in and keep learning.</p>
+          <form id="auth-form" class="auth-form">
+            <label id="name-field" class="field" hidden><span>Your name</span><input id="auth-name" name="name" type="text" autocomplete="name" minlength="2" maxlength="100" placeholder="Sam Taylor" /></label>
+            <label class="field"><span>Email address</span><input id="auth-email" name="email" type="email" autocomplete="email" required placeholder="you@example.com" /></label>
+            <label class="field"><span>Password</span><input id="auth-password" name="password" type="password" autocomplete="current-password" minlength="6" required placeholder="At least 6 characters" /></label>
+            <p id="auth-message" class="auth-message" role="status" aria-live="polite"></p>
+            <button id="auth-submit" class="button button-primary" type="submit">Sign in <span>→</span></button>
+          </form>
+          <p class="auth-note">Your progress is saved to your account.</p>
+        </section>
+      </main>
+      <footer class="auth-footer"><span>THINK. PLAY. LEARN.</span><span>MADE FOR THE CURIOUS</span></footer>
+    </section>
+
+    <div id="app-screen" class="app-screen" hidden>
+      <header class="topbar">
+        <a class="app-brand" href="#"><span class="logo-mark">b<span>·</span></span><span>brightside</span></a>
+        <div class="topbar-user"><span id="role-badge" class="role-badge"></span><span id="user-name" class="user-name"></span><span id="user-avatar" class="user-avatar">B</span><button id="logout-button" class="logout-button" type="button" aria-label="Sign out" title="Sign out">↗</button></div>
+      </header>
+      <div class="app-layout">
+        <aside class="sidebar"><span class="sidebar-label">YOUR SPACE</span><nav id="main-nav" class="main-nav" aria-label="Main navigation"></nav><div class="sidebar-bottom"><span class="sidebar-spark">✳</span><span>Keep showing up.<br /><strong>That’s how it clicks.</strong></span></div></aside>
+        <main class="main-content">
+          <header class="page-heading"><div><span id="page-kicker" class="eyebrow"></span><h1 id="page-title"></h1><p id="page-subtitle"></p></div><div id="page-actions" class="page-actions"></div></header>
+          <section id="page-body" class="page-body"></section>
+          <div id="toast" class="toast" role="status" aria-live="polite"></div>
+        </main>
+      </div>
+    </div>
+
+    <dialog id="dialog" class="dialog"><div id="dialog-content" class="dialog-content"></div></dialog>
+  </body>
+</html>
